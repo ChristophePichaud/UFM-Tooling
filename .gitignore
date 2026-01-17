@@ -419,3 +419,5 @@ FodyWeavers.xsd
 *.a
 obj/
 bin/
+source_analysis_output.json
+include_analysis.json
