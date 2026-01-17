@@ -11,6 +11,7 @@ UFM-Tooling provides powerful parsers and explorers:
 3. **PUMLEntityParser** - Parse PlantUML entity/ER diagrams and extract database schema information
 4. **FileSystemExplorer** - Enumerate files and folders with recursive/non-recursive options
 5. **SourceExplorer** - Explore directories for header files, parse them, and export to JSON
+6. **ShapeElement & LayoutEngine** - Model and arrange UI elements with automatic layout algorithms
 
 ## Features
 
@@ -54,6 +55,14 @@ UFM-Tooling provides powerful parsers and explorers:
 - Export comprehensive analysis to JSON format
 - Includes all class information: members, methods, properties, inheritance
 - Generate structured JSON reports with all parsing details
+
+### ShapeElement & LayoutEngine
+- Model drawing elements and relationships for UI applications
+- Support for different element types (Drawing, Relationship)
+- Automatic layout algorithms: Grid, Hierarchical, Force-Directed, Circular
+- Configurable spacing, margins, and layout behavior
+- Overlap detection and prevention
+- Relationship-aware positioning for connected elements
 
 ## Building the Library
 
@@ -221,6 +230,67 @@ if (result.success) {
 }
 ```
 
+### LayoutEngine Example
+
+```cpp
+#include "ShapeElement.h"
+#include "LayoutEngine.h"
+using namespace UFMTooling;
+
+// Create drawing elements
+auto class1 = std::make_shared<DrawingElement>("UserClass");
+class1->setSize(120.0, 80.0);
+
+auto class2 = std::make_shared<DrawingElement>("OrderClass");
+class2->setSize(120.0, 80.0);
+
+auto class3 = std::make_shared<DrawingElement>("ProductClass");
+class3->setSize(120.0, 80.0);
+
+// Create relationships between elements
+auto rel1 = std::make_shared<RelationshipElement>(class1, class2);
+rel1->setRelationshipType("association");
+rel1->setLabel("places");
+
+auto rel2 = std::make_shared<RelationshipElement>(class2, class3);
+rel2->setRelationshipType("contains");
+
+// Collect all elements
+std::vector<std::shared_ptr<ShapeElement>> elements;
+elements.push_back(class1);
+elements.push_back(class2);
+elements.push_back(class3);
+elements.push_back(rel1);
+elements.push_back(rel2);
+
+// Create layout engine with canvas size
+CanvasSize canvas(1600.0, 900.0);
+LayoutEngine engine(canvas);
+
+// Configure layout
+LayoutConfig config;
+config.strategy = LayoutStrategy::Hierarchical;
+config.padding = 30.0;
+config.respectConnections = true;
+
+// Arrange elements
+LayoutResult result = engine.arrangeElements(elements, config);
+
+if (result.success) {
+    std::cout << "Arranged " << result.elementsArranged << " elements" << std::endl;
+    
+    // Access positioned elements
+    for (const auto& elem : elements) {
+        if (elem->getElementType() == ElementType::Drawing) {
+            auto drawing = std::static_pointer_cast<DrawingElement>(elem);
+            std::cout << drawing->getName() 
+                     << " at (" << elem->getPosition().x 
+                     << ", " << elem->getPosition().y << ")" << std::endl;
+        }
+    }
+}
+```
+
 ## Data Structures
 
 ### SimpleHeaderParser
@@ -261,6 +331,25 @@ Key structures:
 - `SourceFileAnalysis` - Analysis result for a single header file
 - `SourceExplorerResult` - Contains all file analyses with statistics
 
+### ShapeElement & LayoutEngine
+
+Key structures:
+- `ShapeElement` - Base class for all shape elements
+- `DrawingElement` - Represents a drawing element with name, shape type, and color
+- `RelationshipElement` - Represents a relationship between two drawing elements
+- `Position` - 2D position (x, y coordinates)
+- `Size` - Dimensions (width, height)
+- `LayoutEngine` - Arranges elements using various layout strategies
+- `LayoutConfig` - Configuration for layout behavior
+- `LayoutResult` - Results of layout operation
+- `CanvasSize` - Canvas dimensions
+
+Layout strategies:
+- `Grid` - Arrange elements in a uniform grid pattern
+- `Hierarchical` - Arrange elements in levels based on relationships
+- `Force` - Use physics-based force-directed layout
+- `Circular` - Arrange elements in a circular pattern
+
 ## Dependencies
 
 - **C++17 or later** - Required for filesystem support
@@ -271,6 +360,7 @@ Key structures:
 Complete examples are available:
 - `examples/example_usage.cpp` - Demonstrates SimpleHeaderParser, PUMLClassParser, and PUMLEntityParser
 - `examples/test_explorer.cpp` - Demonstrates FileSystemExplorer and SourceExplorer with JSON export
+- `examples/layout_example.cpp` - Demonstrates ShapeElement and LayoutEngine with various layout strategies
 
 ## Architecture
 

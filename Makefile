@@ -19,14 +19,19 @@ OBJECTS := $(SOURCES:$(SRC_DIR)/%.cpp=$(OBJ_DIR)/%.o)
 # Library name
 LIB_NAME := libufmtooling.a
 
-# Example
+# Examples
 EXAMPLE_SRC := $(EXAMPLE_DIR)/example_usage.cpp
 EXAMPLE_BIN := $(BIN_DIR)/example_usage
 
-# Targets
-.PHONY: all clean library example
+LAYOUT_EXAMPLE_SRC := $(EXAMPLE_DIR)/layout_example.cpp
+LAYOUT_EXAMPLE_BIN := $(BIN_DIR)/layout_example
 
-all: library example
+# Targets
+.PHONY: all clean library example examples
+
+all: library examples
+
+examples: example layout_example
 
 library: $(LIB_NAME)
 
@@ -45,6 +50,13 @@ $(EXAMPLE_BIN): $(EXAMPLE_SRC) $(LIB_NAME)
 	@mkdir -p $(BIN_DIR)
 	$(CXX) $(CXXFLAGS) $< -L. -lufmtooling -o $@
 	@echo "Example built: $@"
+
+layout_example: $(LAYOUT_EXAMPLE_BIN)
+
+$(LAYOUT_EXAMPLE_BIN): $(LAYOUT_EXAMPLE_SRC) $(LIB_NAME)
+	@mkdir -p $(BIN_DIR)
+	$(CXX) $(CXXFLAGS) $< -L. -lufmtooling -o $@
+	@echo "Layout example built: $@"
 
 clean:
 	rm -rf $(OBJ_DIR) $(BIN_DIR) $(LIB_NAME)
