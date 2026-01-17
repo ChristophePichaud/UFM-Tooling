@@ -113,6 +113,7 @@ namespace UFMTooling {
         }
 
         void parseClasses(const std::vector<std::string>& lines, ParseResult& result) {
+            (void)result; // Suppress unused parameter warning
             for (size_t i = 0; i < lines.size(); ++i) {
                 std::string line = trim(removeComments(lines[i]));
                 
@@ -359,6 +360,7 @@ namespace UFMTooling {
         }
 
         void parseEnums(const std::vector<std::string>& lines, ParseResult& result) {
+            (void)result; // Suppress unused parameter warning
             for (size_t i = 0; i < lines.size(); ++i) {
                 std::string line = trim(removeComments(lines[i]));
                 

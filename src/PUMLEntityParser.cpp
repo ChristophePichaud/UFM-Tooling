@@ -183,6 +183,11 @@ namespace UFMTooling {
             EntityField field;
             std::string content = trim(line);
 
+            // Skip separator lines
+            if (content == "--" || content.empty()) {
+                return;
+            }
+
             // Check for primary key marker (*)
             if (content.find("*") == 0) {
                 field.isPrimaryKey = true;
@@ -402,6 +407,7 @@ namespace UFMTooling {
 
     std::string PUMLEntityParser::exportToDDL(const std::string& dialect) const {
         // Generate SQL DDL
+        (void)dialect; // Suppress unused parameter warning
         std::stringstream ddl;
         
         for (const auto& entity : pImpl->entities) {
