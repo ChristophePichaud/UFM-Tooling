@@ -145,8 +145,8 @@ namespace UFMTooling {
                             parseBaseClasses(line.substr(colonPos + 1), classInfo);
                         }
 
-                        // Parse class body
-                        i = parseClassBody(lines, i + 1, classInfo);
+                        // Parse class body (start at the declaration line so '{' on same line is seen)
+                        i = parseClassBody(lines, i, classInfo);
                         
                         classes.push_back(classInfo);
                     }

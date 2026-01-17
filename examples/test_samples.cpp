@@ -12,16 +12,28 @@ int main() {
     std::cout << "1. Testing SimpleHeaderParser with sample_header.h\n";
     SimpleHeaderParser headerParser;
     ParseResult headerResult = headerParser.parseFile("examples/sample_header.h");
-    if (headerResult.success) {
+    if (headerResult.success) 
+    {
         std::cout << "   SUCCESS: Found " << headerResult.classes.size() << " classes\n";
-        for (const auto& cls : headerResult.classes) {
+        for (const auto& cls : headerResult.classes) 
+        {
             std::cout << "   - " << cls.name 
                       << " (" << cls.members.size() << " members, " 
                       << cls.methods.size() << " methods)\n";
+
+            for( auto members : cls.members ) 
+            {
+                std::cout << "       Member: " << members.name << " of type " << members.type << "\n";
+            }
         }
-    } else {
+    } 
+    else 
+    {
         std::cout << "   FAILED: " << headerResult.errorMessage << "\n";
     }
+
+
+    return 0;
 
     // Test PUMLClassParser
     std::cout << "\n2. Testing PUMLClassParser with sample_class_diagram.puml\n";

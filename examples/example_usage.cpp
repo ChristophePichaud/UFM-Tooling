@@ -335,7 +335,7 @@ Product ||--o{ OrderItem
     }
 }
 
-int main() {
+int main2() {
     std::cout << "\n";
     printSeparator();
     std::cout << "UFM-TOOLING LIBRARY DEMONSTRATION" << std::endl;
