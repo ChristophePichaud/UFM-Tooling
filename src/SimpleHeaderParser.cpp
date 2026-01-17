@@ -249,8 +249,15 @@ namespace UFMTooling {
             method.isStatic = containsKeyword(cleanLine, "static");
             method.isVirtual = containsKeyword(cleanLine, "virtual");
             method.isPureVirtual = containsKeyword(cleanLine, "= 0");
-            method.isConst = cleanLine.find(")") != std::string::npos && 
-                           cleanLine.find("const", cleanLine.find(")")) != std::string::npos;
+            
+            // Check for const method - look for const after closing parenthesis
+            size_t closeParenPos = cleanLine.find_last_of(")");
+            if (closeParenPos != std::string::npos) {
+                std::string afterParen = cleanLine.substr(closeParenPos + 1);
+                method.isConst = afterParen.find("const") != std::string::npos;
+            } else {
+                method.isConst = false;
+            }
 
             // Extract method signature
             size_t parenPos = cleanLine.find("(");

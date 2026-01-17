@@ -121,8 +121,8 @@ namespace UFMTooling {
                             // Check for stereotype
                             if (nameStr.find("<<") != std::string::npos) {
                                 size_t stereoStart = nameStr.find("<<");
-                                size_t stereoEnd = nameStr.find(">>");
-                                if (stereoEnd != std::string::npos) {
+                                size_t stereoEnd = nameStr.find(">>", stereoStart);
+                                if (stereoEnd != std::string::npos && stereoEnd > stereoStart) {
                                     currentClass.stereotype = nameStr.substr(stereoStart + 2, stereoEnd - stereoStart - 2);
                                     nameStr = trim(nameStr.substr(0, stereoStart)) + trim(nameStr.substr(stereoEnd + 2));
                                 }
