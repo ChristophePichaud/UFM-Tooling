@@ -5,6 +5,9 @@
 
 namespace UFMTooling {
 
+    // Define PI constant for portability
+    constexpr double PI = 3.14159265358979323846;
+
     // ============================================================================
     // LayoutEngine::Impl
     // ============================================================================
@@ -259,7 +262,7 @@ namespace UFMTooling {
         double spread = 200.0;
 
         for (size_t i = 0; i < drawings.size(); ++i) {
-            double angle = (2.0 * M_PI * i) / drawings.size();
+            double angle = (2.0 * PI * i) / drawings.size();
             double x = centerX + spread * std::cos(angle);
             double y = centerY + spread * std::sin(angle);
             drawings[i]->setPosition(x, y);
@@ -371,7 +374,7 @@ namespace UFMTooling {
 
         // Arrange in circle
         for (size_t i = 0; i < drawings.size(); ++i) {
-            double angle = (2.0 * M_PI * i) / drawings.size();
+            double angle = (2.0 * PI * i) / drawings.size();
             double x = centerX + radius * std::cos(angle) - drawings[i]->getSize().width / 2;
             double y = centerY + radius * std::sin(angle) - drawings[i]->getSize().height / 2;
             drawings[i]->setPosition(x, y);
@@ -379,7 +382,7 @@ namespace UFMTooling {
 
         result.success = true;
         result.elementsArranged = static_cast<int>(drawings.size());
-        result.totalArea = M_PI * radius * radius;
+        result.totalArea = PI * radius * radius;
 
         return result;
     }
