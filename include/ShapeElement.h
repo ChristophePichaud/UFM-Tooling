@@ -37,7 +37,6 @@ namespace UFMTooling {
         virtual ~ShapeElement();
 
         // Getters
-        ElementType getType() const;
         const Position& getPosition() const;
         const Size& getSize() const;
         const std::string& getId() const;
@@ -51,9 +50,6 @@ namespace UFMTooling {
 
         // Virtual method to get element type (overridden in derived classes)
         virtual ElementType getElementType() const = 0;
-
-    protected:
-        void setType(ElementType type);
 
     private:
         class Impl;

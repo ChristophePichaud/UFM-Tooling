@@ -7,12 +7,11 @@ namespace UFMTooling {
     // ============================================================================
     class ShapeElement::Impl {
     public:
-        ElementType type;
         Position position;
         Size size;
         std::string id;
 
-        Impl() : type(ElementType::Drawing) {}
+        Impl() {}
     };
 
     // ============================================================================
@@ -22,10 +21,6 @@ namespace UFMTooling {
     }
 
     ShapeElement::~ShapeElement() = default;
-
-    ElementType ShapeElement::getType() const {
-        return pImpl->type;
-    }
 
     const Position& ShapeElement::getPosition() const {
         return pImpl->position;
@@ -61,10 +56,6 @@ namespace UFMTooling {
         pImpl->id = id;
     }
 
-    void ShapeElement::setType(ElementType type) {
-        pImpl->type = type;
-    }
-
     // ============================================================================
     // DrawingElement::Impl
     // ============================================================================
@@ -81,14 +72,12 @@ namespace UFMTooling {
     // DrawingElement
     // ============================================================================
     DrawingElement::DrawingElement() : ShapeElement(), pImpl(std::make_unique<Impl>()) {
-        setType(ElementType::Drawing);
         // Set default size for drawing elements
         setSize(100.0, 60.0);
     }
 
     DrawingElement::DrawingElement(const std::string& name) 
         : ShapeElement(), pImpl(std::make_unique<Impl>()) {
-        setType(ElementType::Drawing);
         pImpl->name = name;
         setSize(100.0, 60.0);
     }
@@ -141,7 +130,6 @@ namespace UFMTooling {
     // ============================================================================
     RelationshipElement::RelationshipElement() 
         : ShapeElement(), pImpl(std::make_unique<Impl>()) {
-        setType(ElementType::Relationship);
         // Relationships don't have fixed size, they're rendered as lines
         setSize(0.0, 0.0);
     }
@@ -149,7 +137,6 @@ namespace UFMTooling {
     RelationshipElement::RelationshipElement(std::shared_ptr<DrawingElement> conn1,
                                             std::shared_ptr<DrawingElement> conn2)
         : ShapeElement(), pImpl(std::make_unique<Impl>()) {
-        setType(ElementType::Relationship);
         pImpl->connector1 = conn1;
         pImpl->connector2 = conn2;
         setSize(0.0, 0.0);
