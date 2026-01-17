@@ -1,0 +1,74 @@
+@startuml
+title Vehicle Class Hierarchy
+
+abstract class Vehicle {
+    - brand : String
+    - model : String
+    - year : int
+    # speed : double
+    + Vehicle(brand : String, model : String, year : int)
+    + {abstract} startEngine() : bool
+    + accelerate(amount : double) : void
+    + brake(amount : double) : void
+    + getSpeed() : double
+    + {static} getVehicleCount() : int
+}
+
+class Car {
+    - numberOfDoors : int
+    - trunkCapacity : double
+    + Car(brand : String, model : String, year : int, doors : int)
+    + startEngine() : bool
+    + openTrunk() : void
+    + closeTrunk() : void
+}
+
+class Motorcycle {
+    - hasSidecar : bool
+    + Motorcycle(brand : String, model : String, year : int)
+    + startEngine() : bool
+    + wheelie() : void
+}
+
+class Truck {
+    - cargoCapacity : double
+    - numberOfAxles : int
+    + Truck(brand : String, model : String, year : int)
+    + startEngine() : bool
+    + loadCargo(weight : double) : bool
+    + unloadCargo() : void
+}
+
+interface Drivable {
+    + drive() : void
+    + stop() : void
+    + turn(angle : double) : void
+}
+
+interface Electric {
+    + charge(hours : double) : void
+    + getBatteryLevel() : double
+}
+
+class ElectricCar {
+    - batteryCapacity : double
+    - chargeLevel : double
+    + charge(hours : double) : void
+    + getBatteryLevel() : double
+}
+
+Vehicle <|-- Car
+Vehicle <|-- Motorcycle
+Vehicle <|-- Truck
+Drivable <|.. Car
+Drivable <|.. Motorcycle
+Drivable <|.. Truck
+Car <|-- ElectricCar
+Electric <|.. ElectricCar
+
+Vehicle --> "1" Engine : uses
+Car *-- "4" Wheel : has
+Motorcycle *-- "2" Wheel : has
+Truck *-- "6..10" Wheel : has
+
+@enduml

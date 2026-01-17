@@ -1,0 +1,93 @@
+@startuml
+title E-Commerce Database Schema
+
+entity Customer {
+    * customer_id : int <PK>
+    --
+    first_name : varchar(50)
+    last_name : varchar(50)
+    email : varchar(100) <UK>
+    phone : varchar(20)
+    registration_date : datetime
+    address : varchar(255)
+    city : varchar(100)
+    country : varchar(100)
+    postal_code : varchar(20)
+}
+
+entity Order {
+    * order_id : int <PK>
+    --
+    + customer_id : int <FK>
+    order_date : datetime
+    shipping_date : datetime
+    total_amount : decimal(10,2)
+    status : varchar(20)
+    shipping_address : varchar(255)
+    billing_address : varchar(255)
+}
+
+entity OrderItem {
+    * order_item_id : int <PK>
+    --
+    + order_id : int <FK>
+    + product_id : int <FK>
+    quantity : int
+    unit_price : decimal(10,2)
+    discount : decimal(5,2)
+    total_price : decimal(10,2)
+}
+
+entity Product {
+    * product_id : int <PK>
+    --
+    + category_id : int <FK>
+    name : varchar(200)
+    description : text
+    price : decimal(10,2)
+    stock_quantity : int
+    sku : varchar(50) <UK>
+    weight : decimal(8,2)
+    dimensions : varchar(50)
+}
+
+entity Category {
+    * category_id : int <PK>
+    --
+    name : varchar(100)
+    description : text
+    + parent_category_id : int <FK>
+}
+
+entity Payment {
+    * payment_id : int <PK>
+    --
+    + order_id : int <FK>
+    payment_date : datetime
+    amount : decimal(10,2)
+    payment_method : varchar(50)
+    transaction_id : varchar(100)
+    status : varchar(20)
+}
+
+entity Review {
+    * review_id : int <PK>
+    --
+    + product_id : int <FK>
+    + customer_id : int <FK>
+    rating : int
+    title : varchar(200)
+    comment : text
+    review_date : datetime
+}
+
+Customer ||--o{ Order : places
+Order ||--o{ OrderItem : contains
+Product ||--o{ OrderItem : included_in
+Category ||--o{ Product : categorizes
+Category ||--o{ Category : parent_of
+Order ||--|| Payment : paid_by
+Product ||--o{ Review : reviewed_by
+Customer ||--o{ Review : writes
+
+@enduml
