@@ -4,11 +4,13 @@ A comprehensive Win32 C++ library for parsing C++ header files and PlantUML diag
 
 ## Overview
 
-UFM-Tooling provides three powerful parsers:
+UFM-Tooling provides powerful parsers and explorers:
 
 1. **SimpleHeaderParser** - Parse C++ header files and extract class structures, methods, members, and more
 2. **PUMLClassParser** - Parse PlantUML class diagrams and extract UML class information
 3. **PUMLEntityParser** - Parse PlantUML entity/ER diagrams and extract database schema information
+4. **FileSystemExplorer** - Enumerate files and folders with recursive/non-recursive options
+5. **SourceExplorer** - Explore directories for header files, parse them, and export to JSON
 
 ## Features
 
@@ -37,6 +39,21 @@ UFM-Tooling provides three powerful parsers:
 - Parse relationships with cardinality
 - Determine relationship types (one-to-one, one-to-many, many-to-many)
 - Export to JSON, XML, and SQL DDL formats
+
+### FileSystemExplorer
+- Enumerate all files and folders in a directory
+- Recursive or non-recursive exploration modes
+- Filter files by extension
+- Retrieve file metadata (size, type, path)
+- Get all files or directories separately
+
+### SourceExplorer
+- Automatically discover and analyze C++ header files (`.h`)
+- Recursively explore directory structures
+- Parse each header file using SimpleHeaderParser
+- Export comprehensive analysis to JSON format
+- Includes all class information: members, methods, properties, inheritance
+- Generate structured JSON reports with all parsing details
 
 ## Building the Library
 
@@ -141,6 +158,69 @@ if (result.success) {
 }
 ```
 
+### FileSystemExplorer Example
+
+```cpp
+#include "FileSystemExplorer.h"
+using namespace UFMTooling;
+
+FileSystemExplorer explorer;
+
+// Explore directory recursively
+FileSystemExplorerResult result = explorer.explore("path/to/directory", true);
+
+if (result.success) {
+    std::cout << "Found " << result.entries.size() << " entries" << std::endl;
+    
+    // Get only header files
+    std::vector<FileSystemEntry> headers = explorer.getFilesByExtension(".h");
+    for (const auto& header : headers) {
+        std::cout << "Header: " << header.path << std::endl;
+    }
+    
+    // Get all directories
+    std::vector<FileSystemEntry> dirs = explorer.getDirectories();
+    
+    // Get all files
+    std::vector<FileSystemEntry> files = explorer.getFiles();
+}
+```
+
+### SourceExplorer Example
+
+```cpp
+#include "SourceExplorer.h"
+using namespace UFMTooling;
+
+SourceExplorer explorer;
+
+// Explore directory and analyze all .h files
+SourceExplorerResult result = explorer.explore("src/include", true);
+
+if (result.success) {
+    std::cout << "Processed " << result.filesProcessed << " files" << std::endl;
+    
+    // Access analysis for each file
+    for (const auto& analysis : result.analyses) {
+        std::cout << "File: " << analysis.filename << std::endl;
+        
+        // Access parsed classes, methods, members
+        for (const auto& cls : analysis.parseResult.classes) {
+            std::cout << "  Class: " << cls.name << std::endl;
+            std::cout << "    Members: " << cls.members.size() << std::endl;
+            std::cout << "    Methods: " << cls.methods.size() << std::endl;
+        }
+    }
+    
+    // Export complete analysis to JSON
+    std::string json = explorer.exportToJson();
+    std::cout << json << std::endl;
+    
+    // Or save to file
+    explorer.exportToJsonFile("analysis_output.json");
+}
+```
+
 ## Data Structures
 
 ### SimpleHeaderParser
@@ -169,12 +249,28 @@ Key structures:
 - `EntityRelationship` - Represents a relationship between entities
 - `PUMLEntityDiagramResult` - Contains parsing results
 
+### FileSystemExplorer
+
+Key structures:
+- `FileSystemEntry` - Represents a file or directory with path, name, size, and type
+- `FileSystemExplorerResult` - Contains exploration results with all found entries
+
+### SourceExplorer
+
+Key structures:
+- `SourceFileAnalysis` - Analysis result for a single header file
+- `SourceExplorerResult` - Contains all file analyses with statistics
+
+## Dependencies
+
+- **C++17 or later** - Required for filesystem support
+- **nlohmann/json** - Included as single-header library for JSON export functionality
+
 ## Example
 
-A complete example demonstrating all three parsers is available in `examples/example_usage.cpp`. This example shows:
-- How to parse C++ headers with classes, inheritance, and methods
-- How to parse PlantUML class diagrams with relationships
-- How to parse PlantUML entity diagrams and generate SQL DDL
+Complete examples are available:
+- `examples/example_usage.cpp` - Demonstrates SimpleHeaderParser, PUMLClassParser, and PUMLEntityParser
+- `examples/test_explorer.cpp` - Demonstrates FileSystemExplorer and SourceExplorer with JSON export
 
 ## Architecture
 
